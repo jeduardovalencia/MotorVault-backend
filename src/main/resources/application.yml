@@ -12,10 +12,24 @@ spring:
     serialization:
       write-dates-as-timestamps: false
 
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:${DB_URL:jdbc:sqlserver://localhost:1433;databaseName=MotorVaultDB;encrypt=false;trustServerCertificate=true}}
+    username: ${SPRING_DATASOURCE_USERNAME:${DB_USERNAME:sa}}
+    password: ${SPRING_DATASOURCE_PASSWORD:${DB_PASSWORD:Admin123!}}
+    driver-class-name: ${DB_DRIVER:com.microsoft.sqlserver.jdbc.SQLServerDriver}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: ${DB_DIALECT:org.hibernate.dialect.SQLServerDialect}
+
 app:
   version: 1.0.0
   cors:
-    allowed-origins: http://localhost:3000,http://localhost:5173
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000,http://localhost:5173}
   jwt:
     secret: ${JWT_SECRET:motorvault-dev-secret-key-change-in-production-must-be-at-least-64-chars}
     expiration-ms: ${JWT_EXPIRATION_MS:86400000}
@@ -86,10 +100,10 @@ spring:
       on-profile: prod
 
   datasource:
-    url: ${DB_URL}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
-    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    url: ${SPRING_DATASOURCE_URL:${DB_URL}}
+    username: ${SPRING_DATASOURCE_USERNAME:${DB_USERNAME}}
+    password: ${SPRING_DATASOURCE_PASSWORD:${DB_PASSWORD}}
+    driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 20
       minimum-idle: 5
@@ -99,11 +113,11 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
     show-sql: false
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.SQLServerDialect
+        dialect: org.hibernate.dialect.PostgreSQLDialect
 
 springdoc:
   swagger-ui:
@@ -119,4 +133,4 @@ logging:
 app:
   version: ${APP_VERSION:1.0.0}
   cors:
-    allowed-origins: ${CORS_ALLOWED_ORIGINS:https://motorvault.com}
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:https://motorvault.vercel.app}

@@ -68,8 +68,8 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
             SELECT v FROM Vehicle v
             JOIN FETCH v.usuario
             WHERE v.activo = true
-            AND (:placa IS NULL OR LOWER(v.placa) LIKE LOWER(CONCAT('%', :placa, '%')))
-            AND (:marca IS NULL OR LOWER(v.marca) = LOWER(:marca))
+            AND (:placa IS NULL OR LOWER(v.placa) LIKE LOWER(CONCAT('%', CAST(:placa AS string), '%')))
+            AND (:marca IS NULL OR LOWER(v.marca) LIKE LOWER(CONCAT('%', CAST(:marca AS string), '%')))
             AND (:anio IS NULL OR v.anio = :anio)
             AND (:desde IS NULL OR v.creadoEn >= :desde)
             AND (:hasta IS NULL OR v.creadoEn <= :hasta)

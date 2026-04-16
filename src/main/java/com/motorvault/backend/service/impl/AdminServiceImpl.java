@@ -23,6 +23,7 @@ import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -146,11 +147,22 @@ public class AdminServiceImpl implements AdminService {
         LocalDateTime desdeTime = desde != null ? desde.atStartOfDay() : null;
         LocalDateTime hastaTime = hasta != null ? hasta.atTime(23, 59, 59) : null;
 
-        return vehicleRepository
-                .buscarAdminConFiltros(placa, marca, anio, desdeTime, hastaTime)
-                .stream()
-                .map(this::toVehicleResponse)
-                .toList();
+        Stream<Vehicle> stream = vehicleRepository
+                .findAllByActivoTrueOrderByCreadoEnDesc()
+                .stream();
+
+        if (placa != null && !placa.isBlank())
+            stream = stream.filter(v -> v.getPlaca().toLowerCase().contains(placa.toLowerCase()));
+        if (marca != null && !marca.isBlank())
+            stream = stream.filter(v -> v.getMarca().toLowerCase().contains(marca.toLowerCase()));
+        if (anio != null)
+            stream = stream.filter(v -> anio.equals(v.getAnio()));
+        if (desdeTime != null)
+            stream = stream.filter(v -> !v.getCreadoEn().isBefore(desdeTime));
+        if (hastaTime != null)
+            stream = stream.filter(v -> !v.getCreadoEn().isAfter(hastaTime));
+
+        return stream.map(this::toVehicleResponse).toList();
     }
 
     @Override

@@ -64,22 +64,4 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
             """)
     List<Object[]> contarPorMarca();
 
-    @Query("""
-            SELECT v FROM Vehicle v
-            JOIN FETCH v.usuario
-            WHERE v.activo = true
-            AND (:placa IS NULL OR LOWER(v.placa) LIKE LOWER(CONCAT('%', CAST(:placa AS string), '%')))
-            AND (:marca IS NULL OR LOWER(v.marca) LIKE LOWER(CONCAT('%', CAST(:marca AS string), '%')))
-            AND (:anio IS NULL OR v.anio = :anio)
-            AND (:desde IS NULL OR v.creadoEn >= :desde)
-            AND (:hasta IS NULL OR v.creadoEn <= :hasta)
-            ORDER BY v.creadoEn DESC
-            """)
-    List<Vehicle> buscarAdminConFiltros(
-            @Param("placa") String placa,
-            @Param("marca") String marca,
-            @Param("anio") Integer anio,
-            @Param("desde") LocalDateTime desde,
-            @Param("hasta") LocalDateTime hasta
-    );
 }

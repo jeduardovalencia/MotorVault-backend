@@ -39,7 +39,7 @@ public class Vehicle {
     @Column(length = 30)
     private String color;
 
-    @Column(columnDefinition = "NVARCHAR(MAX)")
+    @Column(columnDefinition = "TEXT")
     private String fotoUrl;
 
     @Column(nullable = false)
